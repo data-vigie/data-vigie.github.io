@@ -1,0 +1,90 @@
+---
+title: Donnees Citoyennes
+author: data-vigie
+date: '2018-07-24'
+thumbnailImagePosition: left
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg
+categories:
+  - AN
+tags:
+  - Loi
+  - Vote
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# Donnees ouvertes en attente d'analyse  
+
+
+Le mouvement des donnees ouvertes a pris beaucoup d'ampleur. Ce blog s'interesse de facon pedagogique aux donnees liees au fonctionnement democratique en France. 
+
+A travers, une suite d'exemple le lecteur pourra apprendre a utiliser ces donnees via la language statistique ouvert R. 
+
+<!--more-->
+
+Quelques exemples de donnees:  
+
+
+   * [Questions_ecrites XV](http://data.assemblee-nationale.fr/static/openData/repository/15/questions/questions_ecrites/Questions_ecrites_XV.json.zip)  
+  
+
+   * [Questions_orales sans debat XV](http://data.assemblee-nationale.fr/static/openData/repository/15/questions/questions_orales_sans_debat/Questions_orales_sans_debat_XV.json.zip)  
+  
+
+  * [Questions gouvernement XV](http://data.assemblee-nationale.fr/static/openData/repository/15/questions/questions_gouvernement/Questions_gouvernement_XV.json.zip)  
+  
+
+  * [Amendements XIV](http://data.assemblee-nationale.fr/static/openData/repository/14/loi/amendements_legis_XIV/Amendements_XIV.json.zip)  
+  
+
+  * [Scrutins_XIV](http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.json.zip)  
+  
+
+  * [AMO30_tous_acteurs_tous_mandats_tous_organes_historique](http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.json.zip)  
+  
+
+  * [AMO20 Dep_sen_min_tous_mandats_et_organes_XV]()   
+
+  * [Deputes, Mandats, Organes XV](http://data.assemblee-nationale.fr/static/openData/repository/15/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes_XV.json.zip)  
+  
+
+  * [Agenda XV](http://data.assemblee-nationale.fr/static/openData/repository/15/vp/reunions/Agenda_XV.json.zip)  
+  
+
+  * [Scrutins XV](http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.json.zip)  
+
+
+
+  * [Repertoire Agora](https://www.hatvp.fr/agora/opendata/agora_repertoire_opendata.json)
+
+
+
+```{r download}
+
+#install.packages("rjson")
+library("rjson")
+
+
+#agora_repertoire_opendata <- fromJSON(file = "../../data/agora_repertoire_opendata.json")
+#Agenda_XV <- fromJSON(file = "../../data/Agenda_XV.json")
+#Amendements_XV <- fromJSON(file = "../../data/Amendements_XV.json")
+#Scrutins_XV <- fromJSON(file = "../../data/Scrutins_XV.json")
+
+```
+
+# Comment utiliser ces donnees
+
+You can also embed plots. See Figure \@ref(fig:pie) for example:
+
+
+```{r pie, fig.cap='A fancy pie chart.', tidy=FALSE}
+par(mar = c(0, 1, 0, 1))
+pie(
+  c(280, 60, 20),
+  c('Sky', 'Sunny side of pyramid', 'Shady side of pyramid'),
+  col = c('#0292D8', '#F7EA39', '#C4B632'),
+  init.angle = -50, border = NA
+)
+```

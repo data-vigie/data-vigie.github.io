@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>An on Data Vigie</title>
+    <link>/categories/an/</link>
+    <description>Recent content in An on Data Vigie</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 04 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/an/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Donnees Citoyennes</title>
+      <link>/2018/11/donnees-citoyennes/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/donnees-citoyennes/</guid>
+      <description>Donnees ouvertes en attente d’analyse Le mouvement des donnees ouvertes a pris beaucoup d’ampleur. Ce blog s’interesse de facon pedagogique aux donnees liees au fonctionnement democratique en France.
+A travers, une suite d’exemple le lecteur pourra apprendre a utiliser ces donnees via la language statistique ouvert R.
+HUGOMORE42 Quelques exemples de donnees:
+ Questions_ecrites XV
+ Questions_orales sans debat XV
+ Questions gouvernement XV
+ Amendements XIV
+ Scrutins_XIV</description>
+    </item>
+    
+    <item>
+      <title>Nos Deputes</title>
+      <link>/2018/11/nos-deputes/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/nos-deputes/</guid>
+      <description>Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</description>
+    </item>
+    
+    <item>
+      <title>Nos Deputes</title>
+      <link>/2018/11/nos-deputes/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/nos-deputes/</guid>
+      <description>Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</description>
+    </item>
+    
+  </channel>
+</rss>

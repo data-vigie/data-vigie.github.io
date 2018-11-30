@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.51 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Data Vigie">
+<meta name="keywords" content="">
+<meta name="description" content="Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.">
+
+
+<meta property="og:description" content="Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nos Deputes">
+<meta name="twitter:title" content="Nos Deputes">
+<meta property="og:url" content="/2018/11/nos-deputes/">
+<meta property="twitter:url" content="/2018/11/nos-deputes/">
+<meta property="og:site_name" content="Data Vigie">
+<meta property="og:description" content="Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.">
+<meta name="twitter:description" content="Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.">
+<meta property="og:locale" content="fr-fr">
+
+  
+    <meta property="article:published_time" content="2018-11-04T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2018-11-04T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="AN">
+    
+  
+  
+    
+      <meta property="article:tag" content="Loi">
+    
+      <meta property="article:tag" content="Vote">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="//d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg">
+  <meta property="twitter:image" content="//d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/6adef313f1cc6508639b14e6c318f7aa?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/6adef313f1cc6508639b14e6c318f7aa?s=640">
+
+
+    <title>Nos Deputes</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2018/11/nos-deputes/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-nnm2spxvve8onlujjlegkkytaehyadd4ksxc1hyzzq9a2wvtrgbljqyulomn.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Data Vigie</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/6adef313f1cc6508639b14e6c318f7aa?s=90" alt="Photo de l&#39;auteur" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6adef313f1cc6508639b14e6c318f7aa?s=110" alt="Photo de l&#39;auteur" />
+        </a>
+        <h4 class="sidebar-profile-name">Data Vigie</h4>
+        
+          <h5 class="sidebar-profile-bio">Data Science &amp; Democratie</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Accueil</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Catégories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archive</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">À propos</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/kakawait">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Nos Deputes
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-11-04T00:00:00Z">
+        
+  Novembre 4, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>dans</span>
+    
+      <a class="category-link" href="/categories/an">AN</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+
+<div id="visualiser-le-parlement" class="section level1">
+<h1>Visualiser le parlement</h1>
+<p><code>ggparliament</code> est une extension de <code>ggplot2</code> pour visualiser des donnees parliamentaires.</p>
+<p>Ce paquet <code>R</code> permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe</p>
+<!--MORE-->
+<p>Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine. Les parlementaires faisant alors face au président et à son bureau.</p>
+<p>Par contre, l’agencement dans une salle rectangulaire en usage selon le système de Westminster et hérité du bipartisme, où majorité et opposition se font face, aurait plutôt tendance à favoriser les confrontations. Le président (ou « speaker ») placé à l’une des extrémités de la pièce entre ces groupes antagonistes, se retrouvant ainsi en position d’arbitre.</p>
+<p>Les donneeshistorique du parlement francais sont sur <a href="https://fr.wikipedia.org/wiki/Composition_de_l%27Assembl%C3%A9e_nationale_fran%C3%A7aise_par_l%C3%A9gislature">wikipedia</a></p>
+</div>
+<div id="organiser-les-donnees" class="section level1">
+<h1>Organiser les donnees</h1>
+<p>Nous commençons par un bloc de données contenant le nombre de sièges par parti politique.</p>
+<p>Les donnees brutes ne sont pas necessairement dans le bon ordre</p>
+<pre class="r"><code>
+unformatted_data &lt;- election_data %&gt;%
+  filter(country == &quot;Germany&quot; &amp; year == &quot;2017&quot;) %&gt;%
+  arrange(party_long)
+head(unformatted_data)
+#&gt;   year country     house                        party_long party_short
+#&gt; 1 2017 Germany Bundestag            Alliance 90/The Greens       GRUNE
+#&gt; 2 2017 Germany Bundestag           Alternative for Germany         AFD
+#&gt; 3 2017 Germany Bundestag        Christian Democratic Union         CDU
+#&gt; 4 2017 Germany Bundestag Christian Social Union in Bavaria         CSU
+#&gt; 5 2017 Germany Bundestag             Free Democratic Party         FDP
+#&gt; 6 2017 Germany Bundestag           Social Democratic Party         SDP
+#&gt;   seats government  colour
+#&gt; 1    67          0 #64A12D
+#&gt; 2    94          1 #009EE0
+#&gt; 3   200          1 #000000
+#&gt; 4    46          0 #008AC5
+#&gt; 5    80          1 #FFED00
+#&gt; 6   153          0 #EB001F</code></pre>
+<p>Un moyen simple de gérer cela consiste à organiser les données avant de les visualiser.</p>
+<p>Par exemple, dans l’ordre que je préfère (gouvernement à gauche, en commençant par le parti le plus important):</p>
+<pre class="r"><code>formatted_data &lt;- unformatted_data %&gt;%
+  arrange(-government, -seats)
+
+
+head(unformatted_data)
+#&gt;   year country     house                        party_long party_short
+#&gt; 1 2017 Germany Bundestag            Alliance 90/The Greens       GRUNE
+#&gt; 2 2017 Germany Bundestag           Alternative for Germany         AFD
+#&gt; 3 2017 Germany Bundestag        Christian Democratic Union         CDU
+#&gt; 4 2017 Germany Bundestag Christian Social Union in Bavaria         CSU
+#&gt; 5 2017 Germany Bundestag             Free Democratic Party         FDP
+#&gt; 6 2017 Germany Bundestag           Social Democratic Party         SDP
+#&gt;   seats government  colour
+#&gt; 1    67          0 #64A12D
+#&gt; 2    94          1 #009EE0
+#&gt; 3   200          1 #000000
+#&gt; 4    46          0 #008AC5
+#&gt; 5    80          1 #FFED00
+#&gt; 6   153          0 #EB001F</code></pre>
+</div>
+<div id="formatter-et-visualiser" class="section level1">
+<h1>Formatter et visualiser</h1>
+<ul>
+<li><code>ggparliament::parlement_data</code>: Cette fonction décompose les résultats des élections par parti en sièges individuels. Les utilisateurs doivent définir le bloc de données en entrée, le type de législature, le nombre de lignes dans la législature et une variable numérique qui étend le nombre de sièges au nombre total de membres dans la législature.</li>
+</ul>
+<p>Le bloc de données résultant renvoie les coordonnées x et y de chaque siège individuel pour un parlement en demi-cercle de 10 lignes.</p>
+<ul>
+<li><code>ggparliament::geom_parliament_seats</code>:</li>
+</ul>
+<pre class="r"><code>formatted_parl_data &lt;- formatted_data %&gt;%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  type = &quot;semicircle&quot;)
+
+
+german_parliament &lt;- ggplot(formatted_parl_data, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = &quot;semicircle&quot;) + 
+  labs(colour = &quot;Party&quot;, 
+       title = &quot;Résultats des élections&quot;) + 
+  theme_ggparliament() +
+  scale_colour_manual(values = formatted_parl_data$colour, 
+                      limits = formatted_parl_data$party_short)
+
+german_parliament</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-3-1.png" width="576" /></p>
+<p>Cependant cela ne correspond pas forcement à ce que je veux. Pour résoudre ce problème, <code>parlement_data</code> inclut également la possibilité de classer les données pour un traçage à l’aide de <code>plot_order</code>. Si cela est laissé à NULL, aucun tri n’a lieu.</p>
+<pre class="r"><code>german_parliament &lt;- unformatted_data %&gt;%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  plot_order = .$seats,
+                  type = &quot;semicircle&quot;) %&gt;%
+  ggplot(., aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = &quot;semicircle&quot;) + 
+  labs(colour = &quot;Parti&quot;, 
+       title = &quot;Résultats des élections par nombre de sièges par parti&quot;) + 
+  theme_ggparliament() +
+  scale_colour_manual(values = unformatted_data$colour, 
+                      limits = unformatted_data$party_short)
+german_parliament</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
+<p>Etant donné que le gouvernement est une variable binaire, le moyen le plus simple de passer commande, comme dans le premier graphique, consiste à le multiplier par le nombre de sièges, à savoir:</p>
+<pre class="r"><code>german_parliament &lt;- unformatted_data %&gt;%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  plot_order = .$seats * .$government,
+                  type = &quot;semicircle&quot;) %&gt;%
+  ggplot(., aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = &quot;semicircle&quot;) + 
+  labs(colour = &quot;Parti&quot;, 
+       title = &quot;Résultats des élections par nombre de sièges par parti&quot;) + 
+  theme_ggparliament() +
+  scale_colour_manual(values = unformatted_data$colour, 
+                      limits = unformatted_data$party_short)
+german_parliament</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-5-1.png" width="576" /></p>
+<p>Le bloc de données résultant renvoie les coordonnées x et y de chaque siège individuel pour un parlement en demi-cercle de 10 lignes.</p>
+<p>Vous pouvez également créer un bloc de données dans <code>R</code> et tracer vos résultats.</p>
+<pre class="r"><code>house_of_reps &lt;- data.frame(
+  party = c(&quot;Vacancies&quot;,&quot;Republicans&quot;, &quot;Democrats&quot;, &quot;Vacancies&quot;),
+  seats = c(3, 236, 193, 3),
+  color = c(&quot;gray&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;gray&quot;)
+) 
+house_of_reps &lt;- house_of_reps %&gt;% 
+  mutate(party = as.character(party), color = as.character(color)) %&gt;%
+  parliament_data(election_data = .,
+                            parl_rows = 8,
+                            party_seats = .$seats,
+                            type = &#39;semicircle&#39;)
+ggplot(data = house_of_reps) +
+  geom_parliament_seats(aes(x = x,  y = y, color = party)) +
+  theme_ggparliament() +
+  scale_color_manual(values = house_of_reps$color, 
+                     limits = house_of_reps$party)</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="labels" class="section level1">
+<h1>Labels</h1>
+<p><code>ggparliament</code> comprend deux fonctions d’étiquetage des parcelles parlementaires.</p>
+<ul>
+<li><p>Le premier, <code>draw_partylabels ()</code>, trace le nom abrégé des partis et le nombre de sièges attribués au parti.</p></li>
+<li><p>La deuxième fonction, <code>draw_totalseats ()</code>, représente le nombre total de parlementaires au centre du graphique.</p></li>
+</ul>
+<pre class="r"><code>data &lt;- election_data %&gt;% 
+    filter(year == &quot;2016&quot; &amp; 
+             country == &quot;USA&quot; &amp; 
+             house == &quot;Representatives&quot;)
+
+usa_data &lt;- parliament_data(election_data = data, 
+                            type = &quot;semicircle&quot;, 
+                            party_seats = data$seats, 
+                            parl_rows = 8)
+
+ggplot(usa_data, aes(x, y, color = party_long)) + 
+    geom_parliament_seats() + 
+    labs(colour = NULL) +
+    draw_partylabels(type = &quot;semicircle&quot;, 
+                     party_names = party_short, 
+                     party_seats = seats, 
+                     party_colours = colour) +
+  
+    scale_colour_manual(values = usa_data$colour, 
+                        limits = usa_data$party_long) +
+  
+    theme_ggparliament(legend = FALSE) </code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
+<p>Indiquer le nombre total de parlementaires</p>
+<pre class="r"><code>data &lt;- election_data %&gt;% 
+    filter(year == &quot;2016&quot; &amp; 
+             country == &quot;USA&quot; &amp; 
+             house == &quot;Representatives&quot;)
+
+usa_data &lt;- parliament_data(election_data = data, 
+                            type = &quot;semicircle&quot;, 
+                            party_seats = data$seats, 
+                            parl_rows = 8)
+
+ggplot(usa_data, aes(x, y, color=party_long)) + 
+    geom_parliament_seats() + 
+    labs(colour = NULL) +
+    draw_totalseats(n = 435,  type = &quot;semicircle&quot;) +
+    scale_colour_manual(values = usa_data$colour, 
+                        limits = usa_data$party_long) +
+    theme_ggparliament(legend = FALSE) </code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+</div>
+<div id="seuils-de-majorite" class="section level1">
+<h1>Seuils de majorité</h1>
+<p>Le seuil de la majorité marque le point où un groupe a la moitié ou plus de la moitié des sièges au parlement. Pour déterminer le seuil de majorité dans un complot parlementaire, l’utilisateur doit entrer le nombre constituant la majorité ainsi que le type de parlement. La fonction trace une ligne à travers le siège majoritaire. Par défaut, le seuil de la majorité ajoute une annotation indiquant les sièges nécessaires à la formation d’un gouvernement. Cela peut être désactivé en écrivant <code>label = FALSE</code>.</p>
+<pre class="r"><code>germany &lt;- election_data %&gt;%
+  filter(year == 2017 &amp; 
+           country == &quot;Germany&quot;) 
+
+germany &lt;- parliament_data(election_data = germany, 
+                           parl_rows = 12,
+                           party_seats = germany$seats, 
+                           plot_order = germany$government,
+                           type = &#39;semicircle&#39;)
+
+german_parliament &lt;- ggplot(germany, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = &quot;semicircle&quot;) + 
+  labs(colour=&quot;Party&quot;, 
+       title=&quot;Germany 2017 Election Results&quot;) + 
+  theme_ggparliament() +
+  scale_colour_manual(values = germany$colour, 
+                      limits = germany$party_short)
+german_parliament</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+</div>
+<div id="emphase" class="section level1">
+<h1>Emphase</h1>
+<p>Pour mettre l’accent sur certains parlementaires, ajoutez <code>geom_emphasize_parliamentarians ()</code> à votre graphique <code>ggplot2</code>, en spécifiant la variable sur laquelle vous souhaitez mettre l’accent. Cela définira l’alpha sur les sièges restants à 0,6.</p>
+<pre class="r"><code># Take preliminary data as provided in ggparliament
+data &lt;- election_data %&gt;% 
+  filter(year == &quot;2016&quot; &amp; country == &quot;USA&quot; &amp; house == &quot;Representatives&quot;)
+usa_data &lt;- parliament_data(election_data = data, type = &quot;semicircle&quot;, party_seats = data$seats, parl_rows = 8)
+
+# The Center for American Women and Politics provides statistics concerning women in U.S. politics
+# See http://www.cawp.rutgers.edu/women-us-congress-2018 for more information.
+# We create a binary variable -- women are 1, men are 0 -- for each party. Remember, the plot starts from the left hand side and finishes at the right hand side of the legislature. Given that we want to compare the two parties, it makes sense for them to be roughly parallel. 
+women_in_congress &lt;- c(1, 0, 0, 1) 
+# The number of women in US congress - 23 Reps, 61 Dems. The two middle numbers are the remainder (i.e., number of men).
+number_of_women &lt;- c(23, 218, 133, 61)
+# Use rep and mutate to append the binary female variable to the long data set. 
+usa_data &lt;- usa_data %&gt;% mutate(women = rep(women_in_congress, number_of_women))
+# Plot the US congress as normal using geom_parliament_seats
+ggplot(usa_data, aes(x, y, color=party_long)) + 
+    geom_parliament_seats() + 
+    # emphasize the women in each political party -- this must be specified in order for it to work!
+    geom_emphasize_parliamentarians(women == 1) +  
+    draw_majoritythreshold(n = 218, label = FALSE, linecolour = &quot;black&quot;, type = &#39;semicircle&#39;) + 
+    draw_partylabels(type = &#39;semicircle&#39;, party_seats = seats, party_names = party_short, party_colours = colour) + 
+    theme_void() + 
+    theme(plot.title = element_text(hjust = 0.5),
+          legend.position = &quot;none&quot;) + 
+    scale_colour_manual(values = usa_data$colour, limits = usa_data$party_long) + 
+    annotate(geom = &quot;text&quot;, x = 0, y = 0.2, label = &quot;61 Democrats in Congress\n are women. Only 23\nelected Republicans are women.&quot;) + 
+    labs(title = &quot;Women in 115th U.S. Congress&quot;) </code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="mettre-en-evidence" class="section level1">
+<h1>Mettre en évidence</h1>
+<p>Nous pouvons spécifier si un parti fait partie du gouvernement (ou a autrement le contrôle de la législature s’il détient la majorité des sièges) dans notre visualisation en utilisant <code>geom_highlight_gouvernement ()</code>, ce qui entoure le cercle avec un contour.</p>
+<pre class="r"><code>us_congress &lt;- election_data %&gt;%
+  filter(country == &quot;USA&quot; &amp;
+    year == 2016 &amp;
+    house == &quot;Representatives&quot;)
+
+ 
+us_congress &lt;- parliament_data(election_data = us_congress,
+  type = &quot;semicircle&quot;,
+  parl_rows = 10,
+  party_seats = us_congress$seats)
+
+
+ggplot(us_congress, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() + 
+  
+  #specify the variable you want to highlight here!
+  geom_highlight_government(government == 1) + 
+  theme_ggparliament() +
+  labs(colour = NULL, 
+       title = &quot;United States Congress&quot;) +
+  scale_colour_manual(values = us_congress$colour, 
+                      limits = us_congress$party_short) </code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="sieges-en-suspens" class="section level1">
+<h1>Sièges en suspens</h1>
+<p><code>geom_overhang_seats()</code>.</p>
+<pre class="r"><code>data &lt;- election_data %&gt;%
+  filter(country == &quot;Germany&quot; &amp; year == &quot;2013&quot;) %&gt;% # on the federal level, CSU is a part of CDU
+  mutate(seats = gsub(&quot;255&quot;, &quot;311&quot;, seats)) %&gt;% # Add the 56 CSU seats to CDU
+  mutate(seats = as.numeric(as.character(seats))) %&gt;%
+  filter_all(all_vars(!grepl(&#39;Christian Social Union in Bavaria&#39;,.)))
+# binary variable for overhang seat
+overhangseats &lt;- c(1, 0, 1, 0, 1, 0, 1, 0)
+# number of overhang seats and remainder for each party
+number_overhangseats &lt;- c(3, 61, 3, 60,16, 295, 11, 182)
+# expand data
+german_data &lt;- parliament_data(
+  election_data = data,
+  parl_rows = 11,
+  party_seats = data$seats,
+  type = &quot;semicircle&quot;
+)
+german_data &lt;- german_data %&gt;% mutate(overhang_seats = rep(overhangseats, number_overhangseats))
+german_parliament &lt;- ggplot(german_data, aes(x,
+  y,
+  colour = party_short
+)) +
+  geom_parliament_seats() +
+  # Hollow the overhang seats as follows:
+  geom_overhang_seats(overhang_seats == 1) +
+  labs(
+    colour = &quot;Party&quot;,
+    title = &quot;German Bundestag - 2013 election&quot;,
+    subtitle = &quot;Overhang seats are hollow.&quot;
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = &quot;none&quot;
+  ) +
+  draw_partylabels(type = &quot;semicircle&quot;,
+                   party_colours = colour,
+                   party_names = party_short,
+                   party_seats = seats) +
+  scale_colour_manual(
+    values = german_data$colour,
+    limits = german_data$party_short
+  )
+german_parliament</code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="facette" class="section level1">
+<h1>Facette</h1>
+<p>Il faut:</p>
+<ol style="list-style-type: decimal">
+<li>divisé par année</li>
+<li>appliquer les coordonnées de chaque parti dans <code>parliament_data</code></li>
+<li>combinez les lignes dans un grand cadre de données.</li>
+</ol>
+<p>Cela peut être fait en utilisant map de <code>purrr</code>.</p>
+<pre class="r"><code>usa &lt;- election_data %&gt;%
+  filter(country == &quot;USA&quot; &amp;
+    house == &quot;Representatives&quot;)  %&gt;% 
+  split(.$year) %&gt;% # split
+  map(~ parliament_data(election_data = ., # apply
+       party_seats = .$seats,
+       parl_rows = 8,
+       type = &quot;semicircle&quot;)) %&gt;%
+  bind_rows() # combine
+
+
+ggplot(usa, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() + 
+  geom_highlight_government(government == 1) + 
+  labs(colour = NULL, 
+       title = &quot;American Congress&quot;,
+       subtitle = &quot;The party that has control of US Congress is encircled in black.&quot;) +
+  theme_ggparliament() +
+  scale_colour_manual(values = usa$colour, 
+                      limits = usa$party_short) + 
+  theme(legend.position = &#39;bottom&#39;) + 
+  facet_grid(~year, scales = &#39;free&#39;) </code></pre>
+<p><img src="/post/2018-06-15-nos-deputes_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGÉ DANS</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/loi/">Loi</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/vote/">Vote</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/nos-deputes/" data-tooltip="Nos Deputes">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">SUIVANT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PRÉCÉDENT</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/11/nos-deputes/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/11/nos-deputes/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/11/nos-deputes/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 Data Vigie. Tous droits réservés
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/nos-deputes/" data-tooltip="Nos Deputes">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">SUIVANT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PRÉCÉDENT</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/11/nos-deputes/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/11/nos-deputes/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/11/nos-deputes/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2018%2F11%2Fnos-deputes%2F">
+          <i class="fa fa-facebook-official"></i><span>Partager sur Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2018%2F11%2Fnos-deputes%2F">
+          <i class="fa fa-twitter"></i><span>Partager sur Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2018%2F11%2Fnos-deputes%2F">
+          <i class="fa fa-google-plus"></i><span>Partager sur Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/6adef313f1cc6508639b14e6c318f7aa?s=110" alt="Photo de l&#39;auteur" />
+    
+    <h4 id="about-card-name">Data Vigie</h4>
+    
+      <div id="about-card-bio">Data Science &amp; Democratie</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Citoyen
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Rechercher" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">aucun article trouvé</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/donnees-citoyennes/">
+                <h3 class="media-heading">Donnees Citoyennes</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Donnees ouvertes en attente d’analyse Le mouvement des donnees ouvertes a pris beaucoup d’ampleur. Ce blog s’interesse de facon pedagogique aux donnees liees au fonctionnement democratique en France.
+A travers, une suite d’exemple le lecteur pourra apprendre a utiliser ces donnees via la language statistique ouvert R.
+HUGOMORE42 Quelques exemples de donnees:
+ Questions_ecrites XV
+ Questions_orales sans debat XV
+ Questions gouvernement XV
+ Amendements XIV
+ Scrutins_XIV</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/nos-deputes/">
+                <h3 class="media-heading">Nos Deputes</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/nos-deputes/">
+                <h3 class="media-heading">Nos Deputes</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
+Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+ Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="aucun article trouvé"
+         data-message-one="1 article trouvé"
+         data-message-other="{n} articles trouvés">
+         3 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2018\/11\/nos-deputes\/';
+          
+            this.page.identifier = '\/2018\/11\/nos-deputes\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

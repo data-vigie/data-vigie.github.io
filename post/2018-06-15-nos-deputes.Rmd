@@ -1,0 +1,447 @@
+---
+title: Nos Deputes
+author: data-vigie
+date: '2018-11-04'
+thumbnailImagePosition: left
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg
+categories:
+  - AN
+tags:
+  - Loi
+  - Vote
+---
+
+
+# Visualiser le parlement
+
+`ggparliament` est une extension de `ggplot2` pour visualiser des donnees parliamentaires. 
+
+
+Ce paquet `R` permets de visualiser different types d'arrangement de salle de legislature comme l'hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
+
+<!--MORE-->
+
+Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu'il s'agit d'un système démocratique où le multipartisme domine. Les parlementaires faisant alors face au président et à son bureau.
+
+Par contre, l'agencement dans une salle rectangulaire en usage selon le système de Westminster et hérité du bipartisme, où majorité et opposition se font face, aurait plutôt tendance à favoriser les confrontations. Le président (ou « speaker ») placé à l'une des extrémités de la pièce entre ces groupes antagonistes, se retrouvant ainsi en position d'arbitre. 
+
+Les donneeshistorique du parlement francais sont sur [wikipedia](https://fr.wikipedia.org/wiki/Composition_de_l%27Assembl%C3%A9e_nationale_fran%C3%A7aise_par_l%C3%A9gislature)
+
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+# devtools::install_github("data-vigie/ggparliament")
+library(ggparliament)
+library(dplyr)
+library(ggplot2)
+require(tidyr)
+require(magrittr)
+# install.packages("purrr")
+library(purrr)
+
+
+```
+
+
+
+# Organiser les donnees
+
+Nous commençons par un bloc de données contenant le nombre de sièges par parti politique.
+
+Les donnees brutes ne sont pas necessairement dans le bon ordre
+
+
+```{r}
+
+unformatted_data <- election_data %>%
+  filter(country == "Germany" & year == "2017") %>%
+  arrange(party_long)
+head(unformatted_data)
+
+```
+
+
+Un moyen simple de gérer cela consiste à organiser les données avant de les visualiser. 
+
+Par exemple, dans l'ordre que je préfère (gouvernement à gauche, en commençant par le parti le plus important):
+
+
+```{r, fig.width=6, fig.height=4}
+formatted_data <- unformatted_data %>%
+  arrange(-government, -seats)
+
+
+head(unformatted_data)
+
+```
+
+# Formatter et visualiser
+
+  *  `ggparliament::parlement_data`: Cette fonction décompose les résultats des élections par parti en sièges individuels. Les utilisateurs doivent définir le bloc de données en entrée, le type de législature, le nombre de lignes dans la législature et une variable numérique qui étend le nombre de sièges au nombre total de membres dans la législature.
+
+
+Le bloc de données résultant renvoie les coordonnées x et y de chaque siège individuel pour un parlement en demi-cercle de 10 lignes.
+
+
+
+  *  `ggparliament::geom_parliament_seats`:
+
+  
+
+```{r, fig.width=6, fig.height=4}
+formatted_parl_data <- formatted_data %>%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  type = "semicircle")
+
+
+german_parliament <- ggplot(formatted_parl_data, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = "semicircle") + 
+  labs(colour = "Party", 
+       title = "Résultats des élections") + 
+  theme_ggparliament() +
+  scale_colour_manual(values = formatted_parl_data$colour, 
+                      limits = formatted_parl_data$party_short)
+
+german_parliament
+```
+
+
+
+Cependant cela ne correspond pas forcement à ce que je veux. Pour résoudre ce problème, `parlement_data` inclut également la possibilité de classer les données pour un traçage à l'aide de `plot_order`. Si cela est laissé à NULL, aucun tri n'a lieu.
+
+```{r, fig.width=6, fig.height=4}
+german_parliament <- unformatted_data %>%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  plot_order = .$seats,
+                  type = "semicircle") %>%
+  ggplot(., aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = "semicircle") + 
+  labs(colour = "Parti", 
+       title = "Résultats des élections par nombre de sièges par parti") + 
+  theme_ggparliament() +
+  scale_colour_manual(values = unformatted_data$colour, 
+                      limits = unformatted_data$party_short)
+german_parliament
+  
+```
+
+Etant donné que le gouvernement est une variable binaire, le moyen le plus simple de passer commande, comme dans le premier graphique, consiste à le multiplier par le nombre de sièges, à savoir:
+
+
+```{r, fig.width=6, fig.height=4}
+german_parliament <- unformatted_data %>%
+  parliament_data(.,
+                  parl_rows = 12,
+                  party_seats = .$seats,
+                  plot_order = .$seats * .$government,
+                  type = "semicircle") %>%
+  ggplot(., aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = "semicircle") + 
+  labs(colour = "Parti", 
+       title = "Résultats des élections par nombre de sièges par parti") + 
+  theme_ggparliament() +
+  scale_colour_manual(values = unformatted_data$colour, 
+                      limits = unformatted_data$party_short)
+german_parliament
+  
+```
+
+
+
+
+Le bloc de données résultant renvoie les coordonnées x et y de chaque siège individuel pour un parlement en demi-cercle de 10 lignes.
+
+
+
+
+
+
+Vous pouvez également créer un bloc de données dans `R` et tracer vos résultats.
+```{r}
+house_of_reps <- data.frame(
+  party = c("Vacancies","Republicans", "Democrats", "Vacancies"),
+  seats = c(3, 236, 193, 3),
+  color = c("gray", "red", "blue", "gray")
+) 
+house_of_reps <- house_of_reps %>% 
+  mutate(party = as.character(party), color = as.character(color)) %>%
+  parliament_data(election_data = .,
+                            parl_rows = 8,
+                            party_seats = .$seats,
+                            type = 'semicircle')
+ggplot(data = house_of_reps) +
+  geom_parliament_seats(aes(x = x,  y = y, color = party)) +
+  theme_ggparliament() +
+  scale_color_manual(values = house_of_reps$color, 
+                     limits = house_of_reps$party)
+
+```
+
+# Labels
+
+`ggparliament` comprend deux fonctions d'étiquetage des parcelles parlementaires. 
+
+  * Le premier, `draw_partylabels ()`, trace le nom abrégé des partis et le nombre de sièges attribués au parti.  
+  
+  * La deuxième fonction, `draw_totalseats ()`, représente le nombre total de parlementaires au centre du graphique.
+
+
+```{r, fig.width=6, fig.height=4}
+data <- election_data %>% 
+    filter(year == "2016" & 
+             country == "USA" & 
+             house == "Representatives")
+
+usa_data <- parliament_data(election_data = data, 
+                            type = "semicircle", 
+                            party_seats = data$seats, 
+                            parl_rows = 8)
+
+ggplot(usa_data, aes(x, y, color = party_long)) + 
+    geom_parliament_seats() + 
+    labs(colour = NULL) +
+    draw_partylabels(type = "semicircle", 
+                     party_names = party_short, 
+                     party_seats = seats, 
+                     party_colours = colour) +
+  
+    scale_colour_manual(values = usa_data$colour, 
+                        limits = usa_data$party_long) +
+  
+    theme_ggparliament(legend = FALSE) 
+```
+
+Indiquer le nombre total de parlementaires
+
+```{r, fig.width=6, fig.height=4}
+data <- election_data %>% 
+    filter(year == "2016" & 
+             country == "USA" & 
+             house == "Representatives")
+
+usa_data <- parliament_data(election_data = data, 
+                            type = "semicircle", 
+                            party_seats = data$seats, 
+                            parl_rows = 8)
+
+ggplot(usa_data, aes(x, y, color=party_long)) + 
+    geom_parliament_seats() + 
+    labs(colour = NULL) +
+    draw_totalseats(n = 435,  type = "semicircle") +
+    scale_colour_manual(values = usa_data$colour, 
+                        limits = usa_data$party_long) +
+    theme_ggparliament(legend = FALSE) 
+```
+
+
+# Seuils de majorité
+
+Le seuil de la majorité marque le point où un groupe a la moitié ou plus de la moitié des sièges au parlement. Pour déterminer le seuil de majorité dans un complot parlementaire, l'utilisateur doit entrer le nombre constituant la majorité ainsi que le type de parlement. La fonction trace une ligne à travers le siège majoritaire. Par défaut, le seuil de la majorité ajoute une annotation indiquant les sièges nécessaires à la formation d'un gouvernement. Cela peut être désactivé en écrivant `label = FALSE`.
+
+
+
+```{r, fig.height=4, fig.width=8}
+germany <- election_data %>%
+  filter(year == 2017 & 
+           country == "Germany") 
+
+germany <- parliament_data(election_data = germany, 
+                           parl_rows = 12,
+                           party_seats = germany$seats, 
+                           plot_order = germany$government,
+                           type = 'semicircle')
+
+german_parliament <- ggplot(germany, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() +
+  geom_highlight_government(government == 1) + 
+  draw_majoritythreshold(n = 355, label = FALSE, type = "semicircle") + 
+  labs(colour="Party", 
+       title="Germany 2017 Election Results") + 
+  theme_ggparliament() +
+  scale_colour_manual(values = germany$colour, 
+                      limits = germany$party_short)
+german_parliament
+```
+
+
+# Emphase
+
+Pour mettre l'accent sur certains parlementaires, ajoutez `geom_emphasize_parliamentarians ()` à votre graphique `ggplot2`, en spécifiant la variable sur laquelle vous souhaitez mettre l'accent. Cela définira l'alpha sur les sièges restants à 0,6.
+
+
+
+```{r}
+# Take preliminary data as provided in ggparliament
+data <- election_data %>% 
+  filter(year == "2016" & country == "USA" & house == "Representatives")
+usa_data <- parliament_data(election_data = data, type = "semicircle", party_seats = data$seats, parl_rows = 8)
+
+# The Center for American Women and Politics provides statistics concerning women in U.S. politics
+# See http://www.cawp.rutgers.edu/women-us-congress-2018 for more information.
+# We create a binary variable -- women are 1, men are 0 -- for each party. Remember, the plot starts from the left hand side and finishes at the right hand side of the legislature. Given that we want to compare the two parties, it makes sense for them to be roughly parallel. 
+women_in_congress <- c(1, 0, 0, 1) 
+# The number of women in US congress - 23 Reps, 61 Dems. The two middle numbers are the remainder (i.e., number of men).
+number_of_women <- c(23, 218, 133, 61)
+# Use rep and mutate to append the binary female variable to the long data set. 
+usa_data <- usa_data %>% mutate(women = rep(women_in_congress, number_of_women))
+# Plot the US congress as normal using geom_parliament_seats
+ggplot(usa_data, aes(x, y, color=party_long)) + 
+    geom_parliament_seats() + 
+    # emphasize the women in each political party -- this must be specified in order for it to work!
+    geom_emphasize_parliamentarians(women == 1) +  
+    draw_majoritythreshold(n = 218, label = FALSE, linecolour = "black", type = 'semicircle') + 
+    draw_partylabels(type = 'semicircle', party_seats = seats, party_names = party_short, party_colours = colour) + 
+    theme_void() + 
+    theme(plot.title = element_text(hjust = 0.5),
+          legend.position = "none") + 
+    scale_colour_manual(values = usa_data$colour, limits = usa_data$party_long) + 
+    annotate(geom = "text", x = 0, y = 0.2, label = "61 Democrats in Congress\n are women. Only 23\nelected Republicans are women.") + 
+    labs(title = "Women in 115th U.S. Congress") 
+```
+
+
+# Mettre en évidence 
+
+
+Nous pouvons spécifier si un parti fait partie du gouvernement (ou a autrement le contrôle de la législature s'il détient la majorité des sièges) dans notre visualisation en utilisant `geom_highlight_gouvernement ()`, ce qui entoure le cercle avec un contour.
+
+
+```{r}
+us_congress <- election_data %>%
+  filter(country == "USA" &
+    year == 2016 &
+    house == "Representatives")
+
+ 
+us_congress <- parliament_data(election_data = us_congress,
+  type = "semicircle",
+  parl_rows = 10,
+  party_seats = us_congress$seats)
+
+
+ggplot(us_congress, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() + 
+  
+  #specify the variable you want to highlight here!
+  geom_highlight_government(government == 1) + 
+  theme_ggparliament() +
+  labs(colour = NULL, 
+       title = "United States Congress") +
+  scale_colour_manual(values = us_congress$colour, 
+                      limits = us_congress$party_short) 
+
+```
+
+
+
+
+# Sièges en suspens
+
+ `geom_overhang_seats()`.
+
+```{r}
+data <- election_data %>%
+  filter(country == "Germany" & year == "2013") %>% # on the federal level, CSU is a part of CDU
+  mutate(seats = gsub("255", "311", seats)) %>% # Add the 56 CSU seats to CDU
+  mutate(seats = as.numeric(as.character(seats))) %>%
+  filter_all(all_vars(!grepl('Christian Social Union in Bavaria',.)))
+# binary variable for overhang seat
+overhangseats <- c(1, 0, 1, 0, 1, 0, 1, 0)
+# number of overhang seats and remainder for each party
+number_overhangseats <- c(3, 61, 3, 60,16, 295, 11, 182)
+# expand data
+german_data <- parliament_data(
+  election_data = data,
+  parl_rows = 11,
+  party_seats = data$seats,
+  type = "semicircle"
+)
+german_data <- german_data %>% mutate(overhang_seats = rep(overhangseats, number_overhangseats))
+german_parliament <- ggplot(german_data, aes(x,
+  y,
+  colour = party_short
+)) +
+  geom_parliament_seats() +
+  # Hollow the overhang seats as follows:
+  geom_overhang_seats(overhang_seats == 1) +
+  labs(
+    colour = "Party",
+    title = "German Bundestag - 2013 election",
+    subtitle = "Overhang seats are hollow."
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = "none"
+  ) +
+  draw_partylabels(type = "semicircle",
+                   party_colours = colour,
+                   party_names = party_short,
+                   party_seats = seats) +
+  scale_colour_manual(
+    values = german_data$colour,
+    limits = german_data$party_short
+  )
+german_parliament
+```
+
+
+
+# Facette
+
+Il faut:
+
+1) divisé par année
+2) appliquer les coordonnées de chaque parti dans `parliament_data`
+3) combinez les lignes dans un grand cadre de données.
+
+Cela peut être fait en utilisant map de `purrr`.
+
+
+```{r}
+usa <- election_data %>%
+  filter(country == "USA" &
+    house == "Representatives")  %>% 
+  split(.$year) %>% # split
+  map(~ parliament_data(election_data = ., # apply
+       party_seats = .$seats,
+       parl_rows = 8,
+       type = "semicircle")) %>%
+  bind_rows() # combine
+
+
+ggplot(usa, aes(x, y, colour = party_short)) +
+  geom_parliament_seats() + 
+  geom_highlight_government(government == 1) + 
+  labs(colour = NULL, 
+       title = "American Congress",
+       subtitle = "The party that has control of US Congress is encircled in black.") +
+  theme_ggparliament() +
+  scale_colour_manual(values = usa$colour, 
+                      limits = usa$party_short) + 
+  theme(legend.position = 'bottom') + 
+  facet_grid(~year, scales = 'free') 
+
+
+```
+
+
+
+
