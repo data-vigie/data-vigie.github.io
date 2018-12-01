@@ -3,18 +3,40 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/2018/11/donnees-citoyennes/</loc>
+    <loc>/2018/11/cheres-ambassades/</loc>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018/11/donn%C3%A9es-citoyennes/</loc>
     <lastmod>2018-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/2018/11/nos-deputes/</loc>
+    <loc>/2018/11/visualiser-le-parlement/</loc>
     <lastmod>2018-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/2018/11/nos-deputes/</loc>
-    <lastmod>2018-11-04T00:00:00+00:00</lastmod>
+    <loc>/2018/06/qui-sont-nos-d%C3%A9put%C3%A9s/</loc>
+    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2017/06/analyse-de-vote/</loc>
+    <lastmod>2017-06-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/administration/</loc>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/administration/</loc>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -30,13 +52,13 @@
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2018-11-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-11-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -48,13 +70,19 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-11-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/presence/</loc>
+    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2018-11-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-29T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -6,20 +6,31 @@
     <description>Recent content on Data Vigie</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 29 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Donnees Citoyennes</title>
-      <link>/2018/11/donnees-citoyennes/</link>
+      <title>Cheres Ambassades</title>
+      <link>/2018/11/cheres-ambassades/</link>
+      <pubDate>Thu, 29 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/cheres-ambassades/</guid>
+      <description>“What is the phone number of Europe?” Henry Kissinger…
+HUGOMORE42 http://globaldiplomacyindex.lowyinstitute.org/
+library(readr) library(plyr) library(reshape2) require(downloader) ## Loading required package: downloader ## Henry Kissinger’s question, “What is the phone number of Europe?” data &amp;lt;- read_csv(&amp;quot;lowy_diplomacy_dataset_full.csv&amp;quot;) ## Parsed with column specification: ## cols( ## COUNTRY = col_character(), ## `POPULATION (M)` = col_double(), ## `GDP (B, USD)` = col_integer(), ## `G20 RANK` = col_integer(), ## `OECD RANK` = col_integer(), ## `ASIA RANK` = col_integer(), ## `OVERALL RANK` = col_integer(), ## `POST CITY` = col_character(), ## `POST COUNTRY` = col_character(), ## `TYPE OF POST` = col_character(), ## `POST TYPE TITLE` = col_character() ## ) ## Warning in rbind(names(probs), probs_f): number of columns of result is not ## a multiple of vector length (arg 1) ## Warning: 46 parsing failures.</description>
+    </item>
+    
+    <item>
+      <title>Données Citoyennes</title>
+      <link>/2018/11/donn%C3%A9es-citoyennes/</link>
       <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/11/donnees-citoyennes/</guid>
-      <description>Donnees ouvertes en attente d’analyse Le mouvement des donnees ouvertes a pris beaucoup d’ampleur. Ce blog s’interesse de facon pedagogique aux donnees liees au fonctionnement democratique en France.
-A travers, une suite d’exemple le lecteur pourra apprendre a utiliser ces donnees via la language statistique ouvert R.
-HUGOMORE42 Quelques exemples de donnees:
+      <guid>/2018/11/donn%C3%A9es-citoyennes/</guid>
+      <description>Données ouvertes en attente d’analyse Le mouvement des Données ouvertes a pris beaucoup d’ampleur. Ce blog s’interesse de facon pedagogique aux Données liees au fonctionnement democratique en France.
+A travers, une suite d’exemple le lecteur pourra apprendre a utiliser ces Données via la language statistique ouvert R.
+ Quelques exemples de Données:
  Questions_ecrites XV
  Questions_orales sans debat XV
  Questions gouvernement XV
@@ -28,25 +39,37 @@ HUGOMORE42 Quelques exemples de donnees:
     </item>
     
     <item>
-      <title>Nos Deputes</title>
-      <link>/2018/11/nos-deputes/</link>
+      <title>Visualiser le parlement</title>
+      <link>/2018/11/visualiser-le-parlement/</link>
       <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/11/nos-deputes/</guid>
+      <guid>/2018/11/visualiser-le-parlement/</guid>
       <description>Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
 Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
  Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</description>
     </item>
     
     <item>
-      <title>Nos Deputes</title>
-      <link>/2018/11/nos-deputes/</link>
-      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Qui sont nos Députés?</title>
+      <link>/2018/06/qui-sont-nos-d%C3%A9put%C3%A9s/</link>
+      <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/11/nos-deputes/</guid>
-      <description>Visualiser le parlement ggparliament est une extension de ggplot2 pour visualiser des donnees parliamentaires.
-Ce paquet R permets de visualiser different types d’arrangement de salle de legislature comme l’hemycycle ( à la francaise), le Fer à chevel (en australie), les Banc en opposition (en Angleterre), le cercle (en Russie) ou la salle de classe
- Dans un parlement, une salle des séances disposée en hémicycle doit, théoriquement, être destinée à favoriser les consensus entre les groupes politiques surtout lorsqu’il s’agit d’un système démocratique où le multipartisme domine.</description>
+      <guid>/2018/06/qui-sont-nos-d%C3%A9put%C3%A9s/</guid>
+      <description>Classer ou classifier?   Classer Au dela des problematiques sur la representation sociologique des membres de l’assemblee qui a fait l’objet d’etude et d’attente lors des derniers mandats, la question de la performance des deputes se pose souvent.
+nosdeputes est un site de veille citoyennne.
+ la participation à des réunions de commission : L’indicateur calcule le nombre de fois où le député a été présent en commission &amp;amp; les interventions en commission</description>
+    </item>
+    
+    <item>
+      <title>Analyse de Vote</title>
+      <link>/2017/06/analyse-de-vote/</link>
+      <pubDate>Thu, 15 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/2017/06/analyse-de-vote/</guid>
+      <description>Analysons les votes…
+ Visualiser les votes https://freakonometrics.hypotheses.org/50973
+  Organiser les donnees La première partie de l’importation des données vise à importer l’ensemble des députés, c’est à dire l’ensemble des personnes (compris entre 1 et 248) dont le mandat est à l’ASSEMBLEE. Pour chacun de ces députés, on récupére:
+ le numéro de circonscription et de département, afin de pouvoir construire le code IDEN, identifiant unique de chaque circonscription (DDCC, deux chiffres pour le département, deux pour la circonscription), la référence acteur (acteurRef) et la référence mandat (uid) afin de pouvoir construire un identifiant pour chaque député du type (PA?</description>
     </item>
     
   </channel>
