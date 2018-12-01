@@ -1,0 +1,397 @@
+---
+title: Qui sont nos Députés?
+author: data-vigie
+date: '2018-06-15'
+thumbnailImagePosition: left
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg
+categories:
+ - AN
+tags:
+ - Loi
+ - Presence
+---
+
+
+# Classer ou classifier?
+
+
+
+<!--MORE-->
+
+
+
+
+```{r setup, include  =  FALSE}
+knitr::opts_chunk$set(
+ collapse  =  TRUE,
+ comment  =  "#>"
+)
+
+# devtools::install_github("data-vigie/ggparliament")
+library(ggparliament)
+library(dplyr)
+library(ggplot2)
+require(tidyr)
+require(magrittr)
+# install.packages("purrr")
+library(purrr)
+
+require(xml2)
+require(downloader)
+require(stringr)
+require(classInt)
+require(plotrix)
+require(FactoMineR)
+require(sp)
+
+
+library(kableExtra)
+library(DT)
+
+library(twitteR)
+
+#Log your info with the Twitter API:
+#options(httr_oauth_cache = T) #This will enable the use of a local file to cache OAuth access credentials between R sessions.
+#setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+
+
+
+```
+
+
+# Classer 
+
+Au dela des problematiques sur la [representation sociologique des membres de l'assemblee](https://www.inegalites.fr/L-Assemblee-nationale-ne-compte-quasiment-plus-de-representants-des-milieux?id_theme=18)  qui a fait l'objet [d'etude et d'attente lors des derniers mandats](http://www.institutdiderot.fr/wp-content/uploads/2017/09/Une-assembl%C3%A9e-Nationale-plus-repr%C3%A9sentative-mandature-2017-2022.pdf), la question de la performance des deputes se pose souvent.
+
+
+[nosdeputes](https://www.nosdeputes.fr) est un site de veille citoyennne.
+
+
+ * la participation à des réunions de commission : L’indicateur calcule le nombre de fois où le député a été présent en commission &  les interventions en commission 
+
+ * les interventions longues dans l’hémicycle &  les interventions courtes dans l’hémicycle : L’indicateur a été mis en place pour démarquer les députés qui se contentent d’interpellations courtes et inutiles.
+
+ * les amendements signés &  les amendements adoptés
+
+ * les rapports écrits & les propositions de loi signées ou rédigées
+
+ * les questions écrites &  les questions orales
+
+ * les semaines d’activité : Un des indicateurs les plus pertinents : il prend en compte toutes les semaines où le député a pris la parole ou s’est rendu en commission. A
+
+
+le magzine Capital a tente de rassembler ces donner pour [etablir un classement](https://www.capital.fr/economie-politique/les-deputes-en-marche-cancres-de-lassemblee-notre-classement-1262133). Bien sur un tel classement ne peut etre parfait, comme l'a souligne [l'Express](http://blogs.lexpress.fr/cuisines-assemblee/2014/09/10/peut-on-classer-les-deputes/). 
+Jean-Luc melanchon a [fait valoir](https://www.facebook.com/11450328749/posts/certes-ce-classement-est-tr%C3%A8s-flatteur-pour-les-d%C3%A9put%C3%A9s-de-lfi-on-sent-d-ailleur/10156052605808750/) plusieur critiques aussi sur ce classsment. 
+
+ * Les missions d' information et groupe d'étude ne sont pas comptabilisées par exemple.
+
+ * Il y a une inégalité entre commission. Certaines commission se réunissent plus souvent que d’autres. Ainsi les affaires économiques et le développement durable se réunissent plus régulièrement que les Lois (dont l’activité législative est pourtant importante). Dès lors, un député membre d’une commission qui se réunit peu aura forcément des statistiques plus basses. Les présidents de commission sont logiquement avantagés, de même que les rapporteurs des textes importants (mais en même temps il s’agit d’un travail important, il est normal qu’il soit comptabilisé quelque part)
+
+
+
+ * le nombre d’amendements signés est nettement plus élevé dans l’opposition. Dans certains cas, seuls les membres de la commission concernée sont signataires.On ne peut pas comparer un député de la majorité qui n'est pas incité à amender son propre gouvernement avec un député de l'opposition dont c' est le travail essentiel. 
+
+
+ * Un rapport sur une petite proposition de loi vaut un rapport qui aura été précédé de plusieurs centaines d’auditions.Ensuite, il est injuste de reprocher à un député de ne pas avoir fait de rapport car ce n'est pas lui qui en décide. 
+
+Afin d’équilibrer le poids des deux critères dans le classement (nombre de rapports signés et nombre d’amendements adoptés),  on peut etablir un multiplicateur sur la base des valeurs moyennes de chacun des critères : chaque amendement adopté comptant un point et chaque rapport signé peut etre compte sur la base du ratio entre le nombre moyen d’amendements adoptés et du nombre moyen de rapport signés.
+
+ * Un grand nombre de questions écrites est souvent un mauvais signe. Si certaines questions utiles, d’autres ne servent qu’à gonfler les statistiques parlementaires.
+
+ 
+# Classifier
+
+Au dela d'un classement, une approche sur la base de classification peut aussi etre interessante. Elle a ete approche par la socite [](https://www.rumeurpublique.fr/premier-classement-rumeur-publique-de-linfluence-deputes/) dans son rapport sur [l'influence des deputes](https://www.rumeurpublique.fr/NewsLetterRP/Videos_10/Classement%20Rumeur%20Publique%20de%20l'influence%20des%20D%c3%a9put%c3%a9s.pdf). Elle prends donc en compte des elements additionnels. 
+ 
+ * Dans la presse : nombre de mentions dans la presse nationale et locale (sur l’ensemble de l’année 2016)
+ * Nombre de followers sur Twitter
+ * Nombre moyen de retweets obtenus pour chaque tweet, rapporté au nombre de followers
+ * Nombre de likes sur la page Facebook
+ * Nombre de personnes ayant mentionné la page Facebook dans les sept derniers jours
+
+
+
+* Les pros de l’influence
+* Les piliers du Parlement
+* Les stars des médias
+* Les as du clavier
+
+
+
+# Organiser les donnees
+
+
+
+```{r}
+
+
+# https://www.nosdeputes.fr/deputes/csv
+
+depute <- read.csv( url("https://www.nosdeputes.fr/deputes/csv"), sep = ";")
+
+#str(depute)
+
+
+# https://www.nosdeputes.fr/synthese/data/csv
+deputeact <- read.csv( url("https://www.nosdeputes.fr/synthese/data/csv"), sep = ";")
+
+
+#names(deputeact)
+#str(deputeact)
+
+
+depname <- as.data.frame(names(depute))
+names(depname)[1] <- "variable"
+depname$id1 <- row.names(depname)
+
+
+depactname <- as.data.frame(names(deputeact))
+names(depactname)[1] <- "variable"
+depactname$id2 <- row.names(depactname)
+
+namesall <- merge(x = depactname, y = depname, all = TRUE)
+
+commonvariable <- as.character(namesall[ !(is.na(namesall$id1)) & !(is.na(namesall$id2)) ,c("variable")])
+
+
+
+#depute2 <- merge (x = depute, y = deputeact, by = commonvariable, all.x = TRUE)
+
+
+depute2 <- merge (x = depute, y = deputeact[ , c("id_an",
+                  "semaines_presence" , "commission_presences" ,  "commission_interventions",
+                  "hemicycle_interventions",  "hemicycle_interventions_courtes",
+                   "amendements_proposes",  "amendements_signes", "amendements_adoptes", 
+                  "rapports", "propositions_ecrites",  "propositions_signees",
+                   "questions_ecrites",  "questions_orales")], by = "id_an", all.x = TRUE)
+
+## organiser classe d'age
+
+depute2$age <- cut( as.numeric((Sys.Date() - as.Date(depute2$date_naissance, "%Y-%m-%d")) / 365),
+                    breaks=c(0, 30, 35, 40 , 45, 50 , 55, 60 , 65 , 100), include.lowest=TRUE)
+
+#table(depute2$age)
+#kable(names(depute2))
+
+## Nettoyer les profession sur la base des Profession et Categories Socio Professionelle de l'INSEE
+# write.csv( levels(depute2$profession), "profession.csv")
+# write.csv( as.data.frame(table(depute2$profession, depute2$age)), "professionage.csv")
+
+
+## Recuper le nombre de follower sur twitter
+
+#getUser("user", cainfo="cacert.pem", blockOnRateLimit=TRUE)$followersCount
+```
+
+
+
+# Clusterisation
+
+https://www.statmethods.net/advstats/cluster.html
+
+
+```{r}
+
+mydata <- deputeact[ , c("semaines_presence" , "commission_presences" ,  "commission_interventions",
+                         "hemicycle_interventions",  "hemicycle_interventions_courtes",
+                         "amendements_proposes",  "amendements_signes",
+                         "amendements_adoptes", "rapports",
+                         "propositions_ecrites",  "propositions_signees",
+                         "questions_ecrites",  "questions_orales")]
+
+
+
+
+
+# Prepare Data
+mydata <- na.omit(mydata) # listwise deletion of missing
+mydata <- scale(mydata) # standardize variables
+
+row.names(mydata) <- paste(deputeact$nom, deputeact$groupe_sigle, sep = "-")
+
+```
+
+
+```{r}
+
+# Determine number of clusters
+wss <- (nrow(mydata) - 1) * sum(apply(mydata, 2, var)) 
+
+for (i in 2:15) wss[i] <- sum(kmeans(mydata, centers = i)$withinss)
+
+plot(1:15, 
+     wss,
+     type = "b",
+     xlab = "Nombre de Clusters",
+     ylab = "Sommes des carres dans chaque groupes")
+
+# K-Means Cluster Analysis
+fit1 <- kmeans(mydata, 5) # 5 cluster solution
+
+# get cluster means
+kable(aggregate(mydata,by = list(fit1$cluster),FUN = mean))
+
+
+# append cluster assignment
+mydata2 <- data.frame(mydata, fit1$cluster)
+
+# Ward Hierarchical Clustering
+d <- dist(mydata, method = "euclidean") # distance matrix
+fit2 <- hclust(d, method="ward")
+
+
+plot(fit2) # display dendogram
+
+
+# append cluster assignment
+#mydata2 <- data.frame(mydata2, fit2$cluster)
+
+groups <- cutree(fit2, k = 5) # cut tree into 5 clusters
+
+# draw dendogram with red borders around the 5 clusters
+rect.hclust(fit2, k = 5, border="red")
+
+```
+
+# Clusterisation hierarchique
+
+```{r}
+
+# Ward Hierarchical Clustering with Bootstrapped p values
+library(pvclust)
+fit3 <- pvclust(mydata, 
+                method.hclust = "ward.D",
+                method.dist = "euclidean",
+                quiet = TRUE)
+plot(fit3) # dendogram with p values
+# add rectangles around groups highly supported by the data
+pvrect(fit3, alpha = .95)
+
+
+# append cluster assignment
+#mydata2 <- data.frame(mydata2, fit3$cluster)
+
+```
+
+# Clusterisation sur modele
+
+```{r}
+
+# Model Based Clustering
+library(mclust)
+fit3 <- Mclust(mydata)
+#plot(fit) # plot results
+summary(fit3) # display the best model
+
+
+# append cluster assignment
+#mydata2 <- data.frame(mydata2, fit3$cluster)
+
+```
+
+# Clusterisation avec K-means
+
+```{r}
+# K-Means Clustering with 5 clusters
+fit4 <- kmeans(mydata, 5)
+
+# Cluster Plot against 1st 2 principal components
+
+# vary parameters for most readable graph
+library(cluster)
+clusplot(mydata, fit4$cluster, color=TRUE, shade=TRUE,
+         labels = 2, lines = 0)
+
+# Centroid Plot against 1st 2 discriminant functions
+library(fpc)
+plotcluster(mydata, fit4$cluster)
+
+
+# append cluster assignment
+mydata2 <- data.frame(mydata2, fit4$cluster)
+
+
+```
+
+
+# Analyse des composantes principales
+
+```{r}
+#library("devtools")
+#install_github("kassambara/factoextra")
+
+library("factoextra")
+
+
+res.pca <- prcomp(mydata,  scale = TRUE)
+eig <- get_eig(res.pca)
+eig
+get_pca_var(res.pca)
+get_pca_ind(res.pca)
+
+var <- get_pca_var(res.pca)
+names(var)
+ind <- get_pca_ind(res.pca)
+names(ind)
+
+fviz_eig(res.pca)
+
+fviz_pca_ind(res.pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+)
+
+
+
+fviz_pca_var(res.pca,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+)
+
+
+
+
+
+
+#Biplot of individuals and variables
+
+fviz_pca_biplot(res.pca, repel = TRUE,
+                col.var = "#2E9FDF", # Variables color
+                col.ind = "#696969"  # Individuals color
+)
+fviz_pca_biplot(res.pca, repel = FALSE,
+                col.var = "#2E9FDF", # Variables color
+                col.ind = "#696969"  # Individuals color
+)
+
+```
+
+# Analyse des correspondances multiples
+
+
+
+
+
+# et donc... qui est votre Député?
+
+```{r}
+d <- depute2[ , c("nom_circo", "nom","sexe", "age", "profession", "ancien_depute",  "groupe_sigle",
+                  "semaines_presence" , "commission_presences" ,  "commission_interventions",
+                  "hemicycle_interventions",  "hemicycle_interventions_courtes",
+                   "amendements_proposes",  "amendements_signes", "amendements_adoptes", 
+                  "rapports", "propositions_ecrites",  "propositions_signees",
+                   "questions_ecrites",  "questions_orales")]
+
+datatable(d, filter = 'bottom', options = list(pageLength = 15)) %>%
+    formatStyle('nom',color = styleInterval(c(0.5, 56), c('black', 'red', 'blue')),
+                backgroundColor = styleInterval(56.5, c('snow', 'lightyellow')),
+                fontWeight = styleInterval(58.0, c('italics', 'bold')))
+
+
+#rm(depute, y = deputeact)
+
+
+
+```

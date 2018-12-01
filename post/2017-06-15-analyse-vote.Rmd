@@ -1,0 +1,390 @@
+---
+title: Analyse de Vote
+author: data-vigie
+date: '2017-06-15'
+thumbnailImagePosition: left
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg
+categories:
+ - AN
+tags:
+ - Loi
+ - Vote
+---
+Analysons les votes...
+
+<!--MORE-->
+
+
+# Visualiser les votes
+
+https://freakonometrics.hypotheses.org/50973
+
+
+
+<!--MORE-->
+
+
+
+
+```{r setup, include  =  FALSE}
+knitr::opts_chunk$set(
+ collapse  =  TRUE,
+ comment  =  "#>"
+)
+
+# devtools::install_github("data-vigie/ggparliament")
+library(ggparliament)
+library(dplyr)
+library(ggplot2)
+require(tidyr)
+require(magrittr)
+# install.packages("purrr")
+library(purrr)
+
+require(xml2)
+require(downloader)
+require(stringr)
+require(classInt)
+require(plotrix)
+require(FactoMineR)
+require(sp)
+
+
+```
+
+
+
+# Organiser les donnees
+
+
+La première partie de l’importation des données vise à importer l’ensemble des députés, c’est à dire l’ensemble des personnes (compris entre 1 et 248) dont le mandat est à l’`ASSEMBLEE`. Pour chacun de ces députés, on récupére:
+
+  * le numéro de circonscription et de département, afin de pouvoir construire le code `IDEN`, identifiant unique de chaque circonscription (`DDCC`, deux chiffres pour le département, deux pour la circonscription),
+  * la référence acteur (`acteurRef`) et 
+  * la référence mandat (`uid`) afin de pouvoir construire un identifiant pour chaque député du type (`PA???XXXPMXXXXXX`, chaque `X` representant un chiffre, les `?` representant un chiffre ou l’absence de caractères – les `PA` n’ont pas tous le même nombre de caractères). 
+  
+On va ensuite créer des variables qui serviront par la suite : le nombre de vote total, le nombre de vote `POUR`, `CONTRE`, `ABSTENTION` et le nom de l’organe (groupe auquel appartient le deputé à l’assemblée).
+
+
+```{r}
+#path = "http://data.assemblee-nationale.fr/static/openData/repository/AMO/deputes_senateurs_ministres_legislature/AMO20_dep_sen_min_tous_mandats_et_organes_XIV.csv.zip"
+
+#path = "http://data.assemblee-nationale.fr/static/openData/repository/15/amo/deputes_senateurs_ministres_legislature/AMO20_dep_sen_min_tous_mandats_et_organes_XV.csv.zip"
+
+#dest = "deputes.zip"
+#download(path,destfile = dest,mode = "wb")
+#loc = paste(getwd(),"/",dest,sep = "" )
+#unzip(loc)
+dest = "acteurs.csv"
+loc = paste(getwd(),"/",dest,sep = "" )
+t2 = read.csv(loc,sep = ";")
+
+#numcol <- as.data.frame(names(t2))
+
+res = NULL
+
+
+#for (i in 1:248) {
+for (i in 1:4) {  
+  # i <- 1
+  test = str_c("mandats.1..mandat.",i,"..typeOrgane.1.")
+  
+  j = which(colnames(t2)   ==   test)
+  #Je ne récupère que les personnes dont le i ème mandat est un mandat de député i.e siegeant à l'Assemblée Nationale
+  t3 = subset(t2,  t2[,j]  ==  "ASSEMBLEE")
+  
+  if (nrow(t3) != 0) {
+    #Nom des différentes variables en concatenant les chaines
+    circo = str_c("mandats.1..mandat.",i,"..election.1..lieu.1..numCirco.1.")
+    dept = str_c("mandats.1..mandat.",i,"..election.1..lieu.1..numDepartement.1.")
+    acteur = str_c("mandats.1..mandat.",i,"..acteurRef.1.")
+    mandat = str_c("mandats.1..mandat.",i,"..uid.1.")
+    # Récupération du numero de la colonne du data frame dont le nom correspond a chacune des variable voulues
+    k = which(colnames(t3)   ==   circo)
+    l = which(colnames(t3)   ==   dept)
+    m = which(colnames(t3)   ==   acteur)
+    n = which(colnames(t3)   ==   mandat)
+    
+    #Je cree un data frame correspondant "au numero de mandat"
+    t4 = data.frame( as.numeric(as.character(t3[,k])),  
+                     as.numeric(as.character(t3[,l])),
+                     str_c(t3[,m],t3[,n])
+                    )
+    colnames(t4) = c("circo","dept","identifiant")
+    
+    #Et j'ajoute l'ensemble des députés
+    res = rbind(res, t4)
+  }
+}
+
+res$iden = str_c(res$dept, res$circo)
+res$nbVote = 0
+res$oui = 0
+res$non = 0
+res$abst = 0
+res$nomOrgane = 0
+
+#str(res)
+
+```
+
+Ensuite, pour récupérer les votes de chacun des députés à chaque scrutin, on récupére le fichier XML du site data.assemblee-nationale.fr.
+
+
+```{r}
+#path = "http://data.assemblee-nationale.fr/static/openData/repository/LOI/scrutins/Scrutins_XIV.xml.zip"
+#path = "http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip"
+
+#dest = "Scrutins_XV.xml.zip"
+#download(path,destfile = dest,mode = "wb")
+#loc = paste(getwd(),"/",dest,sep = "" )
+#unzip(loc)
+# dest = "Scrutins_XIV.xml"
+dest = "Scrutins_XV.xml"
+loc = paste(getwd(),"/",dest,sep = "" )
+```
+
+En parcourant la hiérarchie du fichier XML (à l’aide de la fonction xml_children) on obtient les différents fils d’un noeud.
+
+```{r}
+
+t = read_xml(loc)
+liste = xml_children(t)
+
+```
+
+Le premier niveau de noeud correspond à l’ensemble des scrutins. En bouclant sur chacun d’eux, on récupéree dans les fils le résultat du vote de chaque scrutin pour chaque député. 
+
+On va se limiter aux scrutins dont le mode de publication scrutin (14ème fils) est “Decompte nominatif” : en effet, pour les scrutins par “Decompte Dissident”, il n’y avait que les votes des députés qui n’avaient pas voté dans le sens la majorité, ce qui introduirait un biais ensuite.
+
+Le 16ème fils correspond à la variable ventilation du vote. Ce noeud recense toutes les données concernant le résultat du vote.
+
+Pour chacun des groupes représentés à l’Assemblée présent dans le fils ventilation vote, on récupère le vote de chaque député du groupe dont les modalités sont : “Non Votant”, “Pour”, “Contre” et “Abstention”.
+
+En bouclant sur l’ensemble des scrutins on comptabilise également le nombre de vote réalisé pour chaque député et le nom de son groupe (organeRef).
+
+```{r}
+
+
+# for (a in liste) {
+#   
+#   # a <- liste[2]
+#   
+#   if (xml_text(xml_children(a)[14])  ==  "DecompteNominatif") {
+#         
+#      numero = xml_text(xml_children(a)[2])
+#      ventil = xml_children(a)[16]
+#      groupe = xml_children(xml_children(xml_children(ventil)))
+#      tempDataFrame = data.frame(res$identifiant,NA)
+#      colnames(tempDataFrame) = c("identifiant",str_c("scrutin",numero))
+# 
+#        for (b in groupe) {
+#               # b <- liste[1]
+#               intermediaire = xml_children(xml_children(b))
+#               nomGroupe = xml_text(xml_children(b)[1])
+# 
+#               for (i in 1:4) {
+#                    # i <- 1
+#                    df3 <- data.frame(xml_text(xml_children(xml_children(intermediaire[3])[i])))
+# 
+#                    if (nrow(df3) != 0) {
+#                      for (j in df3[,]) {
+#                        if (i == 1) {
+#                          j = strsplit(strsplit(strsplit(j,"MG")[[1]],"PSE")[[1]],"PAN")[[1]]
+#                          }
+#                        #res[res$identifiant == j,]$nomOrgane <- as.character(nomGroupe)
+#                        
+#                        if (i != 1)
+#                          res[res$identifiant == j,]$nbVote <- res[res$identifiant == j,]$nbVote + 1
+#                        if (i == 1)
+#                          tempDataFrame[tempDataFrame$identifiant == j,2] <- "NV"
+#                        if (i == 2) {
+#                          res[res$identifiant == j,]$oui <- res[res$identifiant == j,]$oui + 1
+#                          tempDataFrame[tempDataFrame$identifiant == j,2] <- "POUR"
+#                          }
+#                        if (i == 3) {
+#                          res[res$identifiant == j,]$non <- res[res$identifiant == j,]$non + 1
+#                          tempDataFrame[tempDataFrame$identifiant == j, 2] <- "CTRE"
+#                          }
+#                        if (i == 4) {
+#                          res[res$identifiant == j,]$abst <- res[res$identifiant == j,]$abst + 1
+#                          tempDataFrame[tempDataFrame$identifiant == j,2] <- "ABST"
+# 
+#                        }
+#                      }
+#                    }
+#               }
+#               }
+#      res = data.frame(res, tempDataFrame[,2])
+#      }
+#   }
+# 
+# res2 = subset(res,res$dept < 96)
+# 
+# res2$circo = ifelse(nchar(res2$circo)  ==  1, str_c("0",res2$circo) , str_c("",res2$circo))
+# 
+# res2$dept = ifelse(nchar(res2$dept)  ==  1, str_c("0",res2$dept) , str_c("",res2$dept))
+# 
+# res2$iden = str_c(res2$dept,res2$circo)
+# 
+# res2 = subset(res2,!is.na(iden))
+# 
+# res2 = res2[order(res2$iden),]
+# 
+# parIden = aggregate(res2$nbVote, by = list(res2$iden), sum)
+
+```
+
+
+Par soucis de visualisation, on va se limiter ici à la France métropolitaine. 
+
+Il a fallu uniformiser le code IDEN de chaque département pour qu’il corresponde au format utilisé par la carte de France utilisé (DDCC, deux chiffres pour le département, deux pour la circonscription). 
+
+Le fond de carte est le suivant
+
+```{r}
+
+#path = "http://www.laspic.eu/data/documents/circosshp_v3.zip"
+#dest = "circosshp_v3.zip"
+#download(path,destfile = dest,mode = "wb")
+#loc = paste(getwd(),"/",dest,sep = "" )
+#unzip(loc)
+# dest = "circosSHP_v3.RData"
+# loc = paste(getwd(),"/",dest,sep = "" )
+# load(loc)
+```
+
+
+On agrége enfin par par député afin d’obtenir un nombre de vote par circonscription. 
+
+Notons que dans certaines circonscriptions, le député démissionait ou mourrait et était donc remplacé par un autre député. 
+
+J’ai donc choisi de sommer le vote de l’ensemble des députés ayant représenté une circonscription pour le représenter graphiquement : on raisonne par circonscription, et par par représentant.
+
+```{r}
+# nuancier <- findColours(classIntervals(parIden$x, 6, style  =  "quantile"), 
+#                         smoothColors("white",98,"#0C3269"))
+# 
+# plot(fdc, col = nuancier)
+# 
+# leg <- findColours(classIntervals( round(parIden$x), 
+#                                    6, 
+#                                    style = "quantile"), 
+#                    smoothColors("white",98,"#0C3269"), 
+#                    under = "moins de", 
+#                    over = "plus de", 
+#                    between = "–",
+#                    cutlabels = FALSE)
+# 
+# legend("bottomleft",fill = attr(leg, "palette"), 
+#        legend = names(attr(leg,"table")),
+#        title  =  "Nombre de Votes",
+#        bty = "n")
+# 
+# title( main = "Nombre de votes par circonscription",
+#        cex.main = 1.5)
+# 
+# parIdenScrutin = aggregate(res2[,9:ncol(res2)], by = list(res2$iden),na.omit)
+# 
+# for (i in 1:nrow(parIdenScrutin))
+# 
+#   parIdenScrutin$nomOrgane[i] = ifelse(parIdenScrutin$nomOrgane[i][[1]][1] !=  "0", 
+#                                 as.character(parIdenScrutin$nomOrgane[i][[1]][1]),as.character(parIdenScrutin$nomOrgane[i][[1]][2]))
+# 
+# for (i in 3:ncol(parIdenScrutin))
+# parIdenScrutin[,i] = as.factor(levels(parIdenScrutin[,i][[1]])[as.numeric(parIdenScrutin[,i])])
+# parIdenScrutin = replace(parIdenScrutin,is.na(parIdenScrutin),"NV")
+# 
+# 
+# for (i in 1:nrow(parIdenScrutin)) {
+#      if (parIdenScrutin$nomOrgane[i]  ==  "PO656014" || 
+#          parIdenScrutin$nomOrgane[i]  ==  "PO713077" ||
+#          parIdenScrutin$nomOrgane[i]  ==  "PO656002")
+#        
+#      parIdenScrutin$nomOrgane[i] <- "SER"
+#  
+#      if (parIdenScrutin$nomOrgane[i]   ==   "PO656006" ||
+#          parIdenScrutin$nomOrgane[i]   ==  "PO707869")
+#       
+#        parIdenScrutin$nomOrgane[i] <- "LR"
+# 
+#      if (parIdenScrutin$nomOrgane[i]   ==   "PO656022")
+# 
+#        parIdenScrutin$nomOrgane[i] <- "RRDP"
+# 
+#      if (parIdenScrutin$nomOrgane[i]   ==   "PO656010")
+# 
+#        parIdenScrutin$nomOrgane[i] <- "UDI"
+# 
+#      if (parIdenScrutin$nomOrgane[i]   ==   "PO656018")
+# 
+#        parIdenScrutin$nomOrgane[i] <- "GDR"
+# 
+#      if (parIdenScrutin$nomOrgane[i]   ==   "PO645633")
+# 
+#        parIdenScrutin$nomOrgane[i] <- "NI"
+# }
+# 
+# 
+# parIdenScrutin$Group.1 <- as.factor(parIdenScrutin$Group.1)
+# 
+# parIdenScrutin$nomOrgane <- as.factor(as.character(parIdenScrutin$nomOrgane))
+
+```
+
+On peut finir par une petite analyse des correspondances : les députés ont voté a 644 scrutins (en colonne).
+
+Pour chaque scrutin, un député peut avoir voté pour (POUR), contre (CTRE), s’être abstenu (ABST) ou ne pas s’être présenté. 
+
+Si on ne garde que les deux premiers axes pricinpaux, on obtient:
+
+
+```{r}
+
+# acm <- MCA(parIdenScrutin, quali.sup = 2, graph = FALSE)
+# 
+# head(acm$eig,5)
+# 
+# plot(acm$ind$coord[, 1:2], 
+#      type =  "n", 
+#      xlab = paste0("Axe 1 (" , round(acm$eig[1,2], 1), " %)"), 
+#      ylab = paste0("Axe 2 (", round(acm$eig[2,2], 1), " %) "), 
+#      main =  "Nuage des individus selon les partis", 
+#      cex.main = 1, 
+#      cex.axis = 1, 
+#      cex.lab = 1, 
+#      font.lab = 3)
+# 
+# abline(h = 0, v = 0, col =  "grey", lty = 3, lwd = 1)
+# 
+# points(acm$ind$coord[,1:2], 
+#        col = as.numeric(parIdenScrutin$nomOrgane), 
+#        pch = 19, 
+#        cex = 0.5)
+# 
+# legend("topleft", 
+#        legend = levels(parIdenScrutin$nomOrgane), 
+#        bty =  "o", 
+#        text.col = 1:10, 
+#        col = 1:10, 
+#        pch = 18, 
+#        cex = 0.8)
+
+# text(acm$ind$coord[,1:2], 
+#      labels = rownames(acm$ind$coord), 
+#      col = as.numeric(parIdenScrutin$nomOrgane), 
+#      cex = 0.7, 
+#      pos = 4)
+
+```
+
+On a ici le nuage des individus. Ces derniers sont placés en fonction de leur tendance de votes. Les individus les plus proches sont ceux qui votent sensiblement de la même façon tandis que les individus éloignés votent différemment à chaque scrutin. Les couleurs représente le parti auquel appartient le député. Elles sont présentent à titre indicatif pour valider ou non l’hypothèse de “vote en groupes“. 
+
+Sur ce graphique, parmi les groupes représentés, deux sont très nets à gauche et à droite. Un 3ème se remarque dans la partie centre haute du graphique et enfin un 4e groupe dans la supérieure droite du graphique.
+
+Si on se limite aux couleurs (les partis), les deux groupes très nets qui s’opposent sont Les Républicains (LR – Droite, à gauche sur la projection) et le groupe Socialiste, Ecologiste et Républicain (SER – Gauche, à droite sur la projection). Le 3ème groupe qui se distingue représente le groupe d’extrème Gauche GDR (Gauche démocrate et républicaine). 
+
+Ces trois groupes sont disctinct car ils votent de façon opposé. Ensuite en regardant toujours les partis, on remarque que l’Union des Démocrates et Indépendants (UDI – Droite) ont des votes proches de ceux du groupe LR. 
+
+Le groupe Radical, Républicain, démocrate et progressiste ont une façon de voter similaire à SER. 
+Les votes des députés non inscrits varient énormément entre les scrutins, ils ne se rapporchent d’aucun parti.

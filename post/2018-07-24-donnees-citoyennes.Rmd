@@ -1,5 +1,5 @@
 ---
-title: Donnees Citoyennes
+title: Données Citoyennes
 author: data-vigie
 date: '2018-11-04'
 thumbnailImagePosition: left
@@ -15,16 +15,16 @@ tags:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-# Donnees ouvertes en attente d'analyse  
+# Données ouvertes en attente d'analyse  
 
 
-Le mouvement des donnees ouvertes a pris beaucoup d'ampleur. Ce blog s'interesse de facon pedagogique aux donnees liees au fonctionnement democratique en France. 
+Le mouvement des Données ouvertes a pris beaucoup d'ampleur. Ce blog s'interesse de facon pedagogique aux Données liees au fonctionnement democratique en France. 
 
-A travers, une suite d'exemple le lecteur pourra apprendre a utiliser ces donnees via la language statistique ouvert R. 
+A travers, une suite d'exemple le lecteur pourra apprendre a utiliser ces Données via la language statistique ouvert R. 
 
-<!--more-->
+<!--MORE-->
 
-Quelques exemples de donnees:  
+Quelques exemples de Données:  
 
 
    * [Questions_ecrites XV](http://data.assemblee-nationale.fr/static/openData/repository/15/questions/questions_ecrites/Questions_ecrites_XV.json.zip)  
@@ -74,7 +74,7 @@ library("rjson")
 
 ```
 
-# Comment utiliser ces donnees
+# Comment utiliser ces Données
 
 You can also embed plots. See Figure \@ref(fig:pie) for example:
 

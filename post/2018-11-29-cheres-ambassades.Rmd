@@ -1,0 +1,108 @@
+---
+title: Cheres Ambassades
+author: data-vigie
+date: '2018-11-29'
+thumbnailImagePosition: left
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/cover-image-showcase/city-750.jpg
+categories:
+  - Administration
+tags:
+  - Administration
+---
+
+“What is the phone number of Europe?”  Henry Kissinger...
+
+<!--more-->
+
+http://globaldiplomacyindex.lowyinstitute.org/ 
+
+
+```{r}
+library(readr)
+library(plyr)
+library(reshape2)
+require(downloader)
+## Henry Kissinger’s question, “What is the phone number of Europe?”
+
+
+data <- read_csv("lowy_diplomacy_dataset_full.csv")
+
+#names(data)
+
+names(data) <- c( "COUNTRY",   "POPULATION (M)" , "GDP (B, USD)",    "G20 RANK",
+ "OECD RANK",       "ASIA RANK",  "OVERALL RANK",    "POST CITY",
+ "POST COUNTRY",    "TYPE OF POST", "POST TYPE TITLE")
+
+names(data) <- c( "COUNTRY",   "POPULATION" , "GDP",    "G20RANK",
+                  "OECDRANK",       "ASIARANK",  "OVERALLRANK",    "POSTCITY",
+                  "POSTCOUNTRY",    "TYPEOFPOST", "POSTTYPETITLE")
+
+levels(as.factor(data$COUNTRY))
+
+data$Europe <- ""
+data$Europe[data$COUNTRY %in% c("Austria" , "Belgium" , # "Bulgaria",
+                                "Czech Republic", "Croatia", "Cyprus" , "Denmark"  , "Estonia"  , "Finland"  , "France",
+                                "Germany" , "Greece" , "Hungary", "Ireland" , "Italy" , "Latvia", "Lithuania" , "Luxembourg", #"Malta",
+                                "Netherlands" ,
+                                "Poland" , "Portugal" , "Romania", "Slovak Republic" , "Slovenia"  ,"Sweden"  ,  "Spain" ) ] <- "EU"
+
+data$Europe[data$COUNTRY %in% c( "Norway", "Iceland", "Switzerland",  "United Kingdom" ) ] <- "Assoc"
+
+noneu <- data[ !(data$POSTCOUNTRY %in% c("Austria" , "Belgium" , # "Bulgaria",
+                                         "Czech Republic", "Croatia", "Cyprus" , "Denmark"  , "Estonia"  , "Finland"  , "France",
+                                         "Germany" , "Greece" , "Hungary", "Ireland" , "Italy" , "Latvia", "Lithuania" , "Luxembourg", #"Malta",
+                                         "Netherlands" ,
+                                         "Poland" , "Portugal" , "Romania", "Slovak Republic" , "Slovenia"  ,"Sweden"  ,  "Spain")), ]
+
+europe <- unique(data[ data$Europe == "EU" ,c("Europe", "POSTCITY" , "POSTCOUNTRY", "TYPEOFPOST" , "POSTTYPETITLE")])
+
+ctr <- unique(noneu[ ,c("Europe",  "COUNTRY", "POSTCOUNTRY","POSTCITY" ,  "TYPEOFPOST" , "POSTTYPETITLE")])
+ctr <- ctr[ ctr$Europe == "EU", ]
+
+#levels(as.factor(ctr$TYPEOFPOST))
+
+ctr.embassy <- ctr[ ctr$TYPEOFPOST %in% c("Embassy / High Commission","Permanent Mission","Other"), ]
+
+
+ctr.consulate <- ctr[ ctr$TYPEOFPOST %in% c("Consulate / Consulate-General"), ]
+
+#View(ctr[ ctr$TYPEOFPOST %in% c("Other"), ])
+
+
+europe2 <- acast(data,  POSTCOUNTRY ~ Europe, length)
+europe3 <- acast(ctr,  POSTCOUNTRY ~ Europe , length)
+europe4 <- dcast(ctr,   Europe + COUNTRY ~ POSTCOUNTRY , length)
+europe5 <- dcast(ctr,   POSTCOUNTRY ~ COUNTRY  , length)
+europe5 <- dcast(ctr,   POSTCOUNTRY + POSTCITY + TYPEOFPOST + POSTTYPETITLE ~ COUNTRY  , length)
+#europe6 <- dcast(ctr.emabassy,   POSTCOUNTRY + POSTCITY ~ COUNTRY  , length)
+
+
+europe.embassy <- dcast(ctr.embassy,   POSTCOUNTRY  ~ COUNTRY  , length)
+
+#names(europe.embassy)
+europe.embassy$num <- rowSums(europe.embassy[ ,c("Austria" , "Belgium" , # "Bulgaria",
+                                    "Czech Republic", #"Croatia", "Cyprus" ,
+                                    "Denmark"  , "Estonia"  , "Finland"  , "France",
+                                    "Germany" , "Greece" , "Hungary", "Ireland" , "Italy" , "Latvia", #"Lithuania" ,
+                                    "Luxembourg", #"Malta",
+                                    "Netherlands" ,
+                                    "Poland" , "Portugal" , #"Romania",
+                                    "Slovak Republic" , "Slovenia"  ,"Sweden"  ,  "Spain" )])
+
+europe.embassy$pc <- europe.embassy$num/21
+
+europe.consulate <- dcast(ctr.consulate,   POSTCOUNTRY  ~ COUNTRY  , length)
+
+#names(europe.consulate)
+europe.consulate$num <- rowSums(europe.consulate[ ,c("Austria" , "Belgium" , # "Bulgaria",
+                                                 "Czech Republic", #"Croatia", "Cyprus" ,
+                                                 "Denmark"  , "Estonia"  , "Finland"  , "France",
+                                                 "Germany" , "Greece" , "Hungary", "Ireland" , "Italy" , "Latvia", #"Lithuania" ,
+                                                 "Luxembourg", #"Malta",
+                                                 "Netherlands" ,
+                                                 "Poland" , "Portugal" , #"Romania",
+                                                 "Slovak Republic" , "Slovenia"  ,"Sweden"  ,  "Spain" )])
+
+europe.consulate$pc <- europe.consulate$num/21
+
+```
